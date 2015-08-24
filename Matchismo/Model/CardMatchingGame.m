@@ -12,6 +12,8 @@
 
 @property (readwrite, nonatomic) NSInteger score;
 @property (strong, nonatomic) NSMutableArray *cards; // of Card
+@property (nonatomic) NSInteger numCards2match;
+@property (readwrite, nonatomic) NSInteger lastMatchScore;
 
 @end
 
@@ -24,7 +26,14 @@
     return _cards;
 }
 
-- (instancetype)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck
+- (NSArray *)lastMatch {
+    if (!_lastMatch) {
+        _lastMatch = [[NSMutableArray alloc]init];
+    }
+    return _lastMatch;
+}
+
+- (instancetype)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck matching:(NSInteger)numCards2match
 {
     self = [super init];
     if (self) {
@@ -37,6 +46,7 @@
                 break;
             }
         }
+        self.numCards2match = numCards2match;
     }
     return self;
 }
@@ -56,25 +66,37 @@ static const int CHOSING_COST = 1;
         if (card.isChosen) {
             card.chosen = NO;
         } else {
-            // match against other chosen card
-            for (Card *otherCard in self.cards) {
-                if (otherCard.isChosen && !otherCard.isMatched) {
-                    int matchScore = [card match:@[otherCard]];
-                    if (matchScore) {
-                        self.score += matchScore*MATCH_BONUS;
+            NSArray *chosenUnmatchedCards = [self chosenUnmatchedCards];
+            if ([chosenUnmatchedCards count] == self.numCards2match-1) {
+                int matchScore = [card match: chosenUnmatchedCards];
+                if (matchScore) {
+                    self.score += matchScore*MATCH_BONUS;
+                    card.matched = YES;
+                    for (Card *card in chosenUnmatchedCards) {
                         card.matched = YES;
-                        otherCard.matched = YES;
-                    } else {
-                        self.score -= MISMATCH_PENALTY;
-                        otherCard.chosen = NO;
                     }
-                    break; // only chose 2 cards for now
+                    self.lastMatchScore = matchScore;
+                } else {
+                    self.score -= MISMATCH_PENALTY;
+                    for (Card *card in chosenUnmatchedCards) {
+                        card.chosen = NO;
+                    }
+                    self.lastMatchScore = - MISMATCH_PENALTY;
                 }
+                self.lastMatch = [[chosenUnmatchedCards arrayByAddingObject:card]
+                                  valueForKeyPath:@"@unionOfObjects.contents"];
             }
-            self.score -= CHOSING_COST;
             card.chosen = YES;
+            self.score -= CHOSING_COST;
         }
     }
+    
+    
 }
+
+- (NSArray *)chosenUnmatchedCards {
+    return [self.cards filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(isChosen == YES) && (isMatched == NO)"]];
+}
+
 
 @end

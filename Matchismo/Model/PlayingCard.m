@@ -45,18 +45,18 @@
     }
 }
 
+static const int SUIT_FACTOR = 1;
+static const int RANK_FACTOR = 4;
+
+
 - (int)match:(NSArray *)otherCards {
     int score = 0;
-    if ([otherCards count] == 1) {
-        PlayingCard *otherCard = [otherCards firstObject];
-        if (otherCard.rank == self.rank) {
-            score = 4;
-        } else if ([otherCard.suit isEqualToString:self.suit]) {
-            score = 1;
-        }
-    }
-    
-    
+    NSArray *allCards = [otherCards arrayByAddingObject:self];
+    NSUInteger numCards = [allCards count];
+    NSArray *uniqueRanks = [allCards valueForKeyPath:@"@distinctUnionOfObjects.rank"];
+    NSArray *uniqueSuit = [allCards valueForKeyPath:@"@distinctUnionOfObjects.suit"];
+    score += (numCards-[uniqueRanks count])*RANK_FACTOR;
+    score += (numCards-[uniqueSuit count])*SUIT_FACTOR;
     return score;
 }
 
