@@ -22,7 +22,7 @@
 }
 
 + (NSArray *)validSuits {
-    return @[@"♠︎", @"♣︎", @"♥︎", @"♦︎"];
+    return @[@"♠️", @"♣️", @"♥️", @"♦️"];
 }
 
 - (void) setSuit:(NSString *)suit {

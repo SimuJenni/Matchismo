@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import "PlayingCardDeck.h"
 #import "CardMatchingGame.h"
 
 @interface ViewController ()
@@ -29,8 +28,9 @@
     return _game;
 }
 
+// Abstract method
 - (Deck *)createDeck {
-    return [[PlayingCardDeck alloc] init];
+    return nil;
 }
 
 - (IBAction)touchCardButton:(UIButton *)sender {
@@ -52,7 +52,7 @@
     for (UIButton *cardButton in self.cardButtons) {
         NSUInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
         Card *card = [self.game cardAtIndex:cardButtonIndex];
-        [cardButton setTitle:[self titleForCard:card] forState:UIControlStateNormal];
+        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
         [cardButton setBackgroundImage:[self imageForCard:card] forState:UIControlStateNormal];
         cardButton.enabled = !card.isMatched;
         self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", (long)self.game.score];
@@ -60,8 +60,9 @@
     }
 }
 
-- (NSString *)titleForCard:(Card *)card {
-    return card.isChosen ? card.contents : @"";
+- (NSAttributedString *)titleForCard:(Card *)card {
+    NSAttributedString *title = [[NSAttributedString alloc]initWithString:card.isChosen ? card.contents :@""];
+    return title;
 }
 
 - (UIImage *)imageForCard:(Card *)card {
@@ -69,7 +70,11 @@
 }
 
 - (NSInteger)cards2Match {
-    return self.gameTypeSwitch.selectedSegmentIndex + 2;
+    if (self.gameTypeSwitch) {
+        return self.gameTypeSwitch.selectedSegmentIndex + 2;
+    } else {
+        return 3;
+    }
 }
 
 - (NSString *)makeLabelString {
