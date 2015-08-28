@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Card : NSObject
+@interface Card : NSObject <NSCopying>
 
 @property (strong, nonatomic) NSString *contents;
 
@@ -16,5 +16,7 @@
 @property (nonatomic, getter=isMatched) BOOL matched;
 
 - (int)match:(NSArray *)otherCards;
+- (void)copyFieldsTo:(Card *)copy withZone: (NSZone *)zone;
+
 
 @end

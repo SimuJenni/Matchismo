@@ -60,4 +60,17 @@ static const int RANK_FACTOR = 4;
     return score;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    PlayingCard *copy = [[PlayingCard allocWithZone:zone]init];
+    [self copyFieldsTo:copy withZone:zone];
+    return copy;
+}
+
+
+- (void)copyFieldsTo:(PlayingCard *)copy withZone:(NSZone *)zone{
+    [super copyFieldsTo:copy withZone:zone];
+    copy.rank = self.rank;
+    copy.suit = [self.suit copyWithZone:zone];
+}
+
 @end

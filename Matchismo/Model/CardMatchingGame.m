@@ -67,7 +67,9 @@ static const int CHOSING_COST = 1;
             card.chosen = NO;
         } else {
             NSArray *chosenUnmatchedCards = [self chosenUnmatchedCards];
+            card.chosen = YES;
             if ([chosenUnmatchedCards count] == self.numCards2match-1) {
+                self.lastMatch = [[NSArray alloc]initWithArray:[[chosenUnmatchedCards arrayByAddingObject:card] copy] copyItems:YES];
                 int matchScore = [card match: chosenUnmatchedCards];
                 if (matchScore) {
                     self.score += matchScore*MATCH_BONUS;
@@ -83,10 +85,7 @@ static const int CHOSING_COST = 1;
                     }
                     self.lastMatchScore = - MISMATCH_PENALTY;
                 }
-                self.lastMatch = [[chosenUnmatchedCards arrayByAddingObject:card]
-                                  valueForKeyPath:@"@unionOfObjects.contents"];
             }
-            card.chosen = YES;
             self.score -= CHOSING_COST;
         }
     }

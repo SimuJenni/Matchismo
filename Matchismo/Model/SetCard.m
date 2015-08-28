@@ -65,4 +65,19 @@ static const int MATCH_POINTS = 1;
     return score;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    SetCard *copy = [[SetCard allocWithZone:zone]init];
+    [self copyFieldsTo:copy withZone:zone];
+    return copy;
+}
+
+- (void)copyFieldsTo:(SetCard *)copy withZone:(NSZone *)zone{
+    [super copyFieldsTo:copy withZone:zone];
+    copy.color = [self.color copyWithZone:zone];
+    copy.symbol = [self.symbol copyWithZone:zone];
+    copy.alpha = self.alpha;
+    copy.numSymbols = self.numSymbols;
+}
+
+
 @end

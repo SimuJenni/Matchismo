@@ -26,5 +26,17 @@
     return score;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    Card *copy = [[Card allocWithZone:zone]init];
+    [self copyFieldsTo:copy withZone:zone];
+    return copy;
+}
+
+- (void)copyFieldsTo:(Card *)copy withZone: (NSZone *)zone{
+    copy.matched = self.matched;
+    copy.chosen = self.chosen;
+    copy.contents = [self.contents copyWithZone:zone];
+}
+
 
 @end
