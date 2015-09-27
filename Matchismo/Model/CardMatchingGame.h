@@ -15,9 +15,12 @@
 - (instancetype)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck matching:(NSInteger)numCards2match;
 - (void)choseCardAtIndex:(NSUInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
+- (void)removeMatchedCards;
+
 
 @property (readonly, nonatomic) NSInteger score;
 @property (strong, nonatomic) NSArray *lastMatch;
 @property (readonly, nonatomic) NSInteger lastMatchScore;
+@property (readonly, nonatomic) NSInteger numDealtCards;
 
 @end

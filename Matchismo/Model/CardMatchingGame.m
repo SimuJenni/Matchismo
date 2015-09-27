@@ -19,6 +19,10 @@
 
 @implementation CardMatchingGame
 
+- (NSInteger)numDealtCards {
+    return [self.cards count];
+}
+
 - (NSMutableArray *)cards {
     if (!_cards) {
         _cards = [[NSMutableArray alloc] init];
@@ -90,7 +94,11 @@ static const int CHOSING_COST = 1;
         }
     }
     
-    
+}
+
+- (void)removeMatchedCards {
+    NSArray *unmatched = [self.cards filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(isMatched == NO)"]];
+    self.cards = [NSMutableArray arrayWithArray:unmatched];
 }
 
 - (NSArray *)chosenUnmatchedCards {

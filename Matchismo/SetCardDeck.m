@@ -15,16 +15,15 @@
     self = [super init];
     
     if (self) {
-        NSArray *alphas =[SetCard validAlphas];
-        for (NSString *color in [SetCard validColors]) {
-            for (NSString *symbol in [SetCard validSymbols]) {
-                for (int i=1; i<=[SetCard maxNumSymbols]; i++) {
-                    for (int j=0; j<[alphas count]; j++) {
+        for (int color=1; color<4; color++) {
+            for (int shape=1; shape<4; shape++) {
+                for (int count=1; count<4; count++) {
+                    for (int shading=0; shading<4; shading++) {
                         SetCard *card = [[SetCard alloc]init];
                         [card setColor:color];
-                        [card setSymbol:symbol];
-                        [card setNumSymbols:i];
-                        card.alpha = [alphas[j]doubleValue];
+                        [card setShape:shape];
+                        [card setNumSymbols:count];
+                        [card setShading:shading];
                         [self addCard:card];
                     }
                 }

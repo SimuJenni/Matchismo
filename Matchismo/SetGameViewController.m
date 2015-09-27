@@ -9,6 +9,7 @@
 #import "SetGameViewController.h"
 #import "SetCardDeck.h"
 #import "SetCard.h"
+#import "SetCardView.h"
 
 @interface SetGameViewController ()
 
@@ -20,31 +21,20 @@
     return [[SetCardDeck alloc] init];
 }
 
-- (UIImage *)imageForCard:(Card *)card {
-    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"setcardback"];
+- (void) viewDidLoad {
+    [super viewDidLoad];
+    self.numInitialCards = 12;
+    self.maxCardSize = CGSizeMake(120.0, 120.0);
 }
 
-- (NSAttributedString *)titleForCard:(SetCard *)card {
-    NSString *text = @"";
-    for (int i=0; i<card.numSymbols; i++) {
-        text = [text stringByAppendingString:card.symbol];
+- (void)updateCardView:(CardView *)cardView forCardIndex:(NSInteger)idx inFrame:(CGRect)frame {
+    cardView.tag = idx;
+    Card *card = [self.game cardAtIndex:idx];
+    SetCardView *cv = (SetCardView *) cardView;
+    [UIView animateWithDuration:0.5 delay:0 options: UIViewAnimationOptionTransitionNone animations:^{cv.chosen = card.isChosen;} completion:^(BOOL finished){}];
+    if(card.matched) {
+        [self removeCard:cardView];
     }
-    UIColor *color = [self colorFromName:card.color];
-    UIColor *fillcolor = [color colorWithAlphaComponent:card.alpha];
-    NSDictionary *attributes = @{NSForegroundColorAttributeName: fillcolor,
-                                 NSStrokeWidthAttributeName: @-5,
-                                 NSStrokeColorAttributeName: color};
-    NSMutableAttributedString *title = [[NSMutableAttributedString alloc]initWithString:text attributes:attributes];
-    
-    return title;
-}
-
-
-- (UIColor *)colorFromName:(NSString *)name {
-    NSDictionary *colorDict = @{ @"green": [UIColor greenColor],
-                                 @"red" : [UIColor redColor],
-                                 @"purple": [UIColor purpleColor]};
-    return colorDict[name];
 }
 
 @end

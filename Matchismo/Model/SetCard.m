@@ -11,37 +11,19 @@
 @implementation SetCard
 
 + (NSArray *)validColors {
-    return @[@"red", @"green", @"purple"];
+    return @[@1, @2, @3];
 }
 
-+ (NSArray *)validSymbols {
-    return @[@"▲", @"◼︎", @"◉"];
++ (NSArray *)validShapes {
+    return @[@1, @2, @3];
 }
 
-+ (NSArray *)validAlphas {
-    return @[@0.0, @0.3, @1.0];
++ (NSArray *)validShading {
+    return @[@1, @2, @3];
 }
 
 + (NSInteger)maxNumSymbols {
     return 3;
-}
-
-- (void) setSymbol:(NSString *)symbol {
-    if ([[SetCard validSymbols] containsObject: symbol]) {
-        _symbol = symbol;
-    }
-}
-
-- (void) setColor:(NSString *)color {
-    if ([[SetCard validColors] containsObject:color]) {
-        _color = color;
-    }
-}
-
-- (void) setAlpha:(double)alpha {
-    if ([[SetCard validAlphas] containsObject:@(alpha) ]) {
-        _alpha = alpha;
-    }
 }
 
 static const int MATCH_POINTS = 1;
@@ -51,14 +33,14 @@ static const int MATCH_POINTS = 1;
     NSArray *allCards = [otherCards arrayByAddingObject:self];
     NSArray *uniqueColors = [allCards valueForKeyPath:@"@distinctUnionOfObjects.color"];
     NSArray *uniqueNums = [allCards valueForKeyPath:@"@distinctUnionOfObjects.numSymbols"];
-    NSArray *uniqueSymbols = [allCards valueForKeyPath:@"@distinctUnionOfObjects.symbol"];
-    NSArray *uniqueAlphas = [allCards valueForKeyPath:@"@distinctUnionOfObjects.alpha"];
+    NSArray *uniqueShapes = [allCards valueForKeyPath:@"@distinctUnionOfObjects.shape"];
+    NSArray *uniqueShading = [allCards valueForKeyPath:@"@distinctUnionOfObjects.shading"];
     if ([uniqueColors count] == 1 || [uniqueNums count] == 1 ||
-        [uniqueSymbols count] == 1 || [uniqueAlphas count] == 1) {
+        [uniqueShapes count] == 1 || [uniqueShading count] == 1) {
         score += MATCH_POINTS;
     }
     if ([uniqueColors count] == 3 || [uniqueNums count] == 3 ||
-        [uniqueSymbols count] == 3 || [uniqueAlphas count] == 3) {
+        [uniqueShapes count] == 3 || [uniqueShading count] == 3) {
         score += MATCH_POINTS;
     }
 
@@ -73,9 +55,9 @@ static const int MATCH_POINTS = 1;
 
 - (void)copyFieldsTo:(SetCard *)copy withZone:(NSZone *)zone{
     [super copyFieldsTo:copy withZone:zone];
-    copy.color = [self.color copyWithZone:zone];
-    copy.symbol = [self.symbol copyWithZone:zone];
-    copy.alpha = self.alpha;
+    copy.color = self.color;
+    copy.shape = self.color;
+    copy.shading = self.shading;
     copy.numSymbols = self.numSymbols;
 }
 
